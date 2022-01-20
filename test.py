@@ -1,2 +1,3 @@
-print("Hello World")
-print("Test")
+print("Hello World") 
+x = "deez nuts"
+print(x)
