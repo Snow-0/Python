@@ -24,11 +24,13 @@ while True:
 # Randomizes the list 
 random.shuffle(all_char)  
 
+# prints 5 random passwords, all 15 characters
+for i in range(5):
 # determines the length of the password set by the user
 # appends each charcter into the password list
-for _ in range(user_input):
-    password.append(random.choice(all_char))
-
-# joins the list into a string
-password = ''.join(password)
-print(password)
+    for y in range(user_input):
+        password.append(random.choice(all_char))
+    # joins the list into a string
+    password = ''.join(password)
+    print(password)
+    password = []
