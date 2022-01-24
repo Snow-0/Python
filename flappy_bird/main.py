@@ -86,11 +86,11 @@ class Bird(pygame.sprite.Sprite):
                 self.vel = -10
             if pygame.mouse.get_pressed()[0] == 0:
                 self.clicked = False
-            
+
             if pygame.key.get_pressed()[K_SPACE] == 1:
                 self.clicked = True
                 self.vel = -10
-            
+
             if pygame.key.get_pressed()[K_SPACE] == 0:
                 self.clicked = False
 
@@ -236,8 +236,7 @@ while run:
             run = False
         if (
             event.type == pygame.MOUSEBUTTONDOWN
-            or
-            event.type == pygame.KEYDOWN
+            or event.type == pygame.KEYDOWN
             and flying == False
             and game_over == False
         ):
