@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import random
 
 pygame.init()
 
@@ -29,12 +30,20 @@ class Snake(pygame.sprite.Sprite):
         # gets the rectangle
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+        self.move_dir = ""
 
         # Draws rectangle
         # pygame.draw.rect(screen, SNAKE_COLOR, (self.x, self.y, self.width, self.height))
 
     def border_collision(self):
-        pass
+        if snake.move_dir == "left" and snake.rect.x - VEL > 0:
+            snake.rect.x -= VEL
+        if snake.move_dir == "right" and snake.rect.x + VEL + snake.width < 600:
+            snake.rect.x += VEL
+        if snake.move_dir == "up" and snake.rect.y - VEL > 0:
+            snake.rect.y -= VEL
+        if snake.move_dir == "down" and snake.rect.y + VEL + snake.height < 700:
+            snake.rect.y += VEL
 
 
 # Snake
@@ -59,16 +68,17 @@ while run:
         elif event.type == KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 run = False
-        print(snake.rect.x)
+            # prevent diagonal movement
+            # https://stackoverflow.com/questions/60252752/i-want-to-prevent-diagonal-movement-in-pygame
+            elif event.key in [
+                pygame.K_RIGHT,
+                pygame.K_LEFT,
+                pygame.K_UP,
+                pygame.K_DOWN,
+            ]:
+                snake.move_dir = pygame.key.name(event.key)
 
-    if keys[pygame.K_LEFT]:
-        snake.rect.x -= VEL
-    if keys[pygame.K_RIGHT]:
-        snake.rect.x += VEL
-    if keys[pygame.K_UP]:
-        snake.rect.y -= VEL
-    if keys[pygame.K_DOWN]:
-        snake.rect.y += VEL
+    snake.border_collision()
 
     pygame.display.update()
 
