@@ -1,3 +1,5 @@
+# Simple Area/Perimeter Calculator for Rectangle
+
 
 class Shape:
     def __init__(self, length, width):
@@ -23,13 +25,12 @@ class Shape:
 
     # Calculates perm of the shape
     def get_perimeter(self):
-        print("The perimeter of this shape is " +
-              str(2 * self.length + 2 * self.width))
+        print("The perimeter of this shape is " + str(2 * self.length + 2 * self.width))
 
     # Calculates area of the shape
     def get_area(self):
-        print("The area of this shape is " +
-              str(self.length * self.width))
+        print("The area of this shape is " + str(self.length * self.width))
+
 
 # Practicing inheritance
 
@@ -64,11 +65,9 @@ while True:
     print("7: Quit")
     while True:
         try:
-            ans = int(
-                input("Choose the number that corresponds to the function: "))
+            ans = int(input("Choose the number that corresponds to the function: "))
         except ValueError:
             print("Invalid Number")
-            continue
         else:
             # if else statements based on what number the user chose
             if ans == 1:
@@ -82,18 +81,21 @@ while True:
                     print("Invalid number.")
                 else:
                     rect1.set_length(length)
-                    print("You have set the length the rectangle to " +
-                          str(rect1.get_length()))
+                    print(
+                        "You have set the length the rectangle to "
+                        + str(rect1.get_length())
+                    )
             elif ans == 4:
                 try:
                     width = int(input("Enter a number to set the width: "))
                 except ValueError:
                     print("Invalid number.")
-                    continue
                 else:
                     rect1.set_width(width)
-                    print("You have set the width of the rectangle to " +
-                          str(rect1.get_width()))
+                    print(
+                        "You have set the width of the rectangle to "
+                        + str(rect1.get_width())
+                    )
             elif ans == 5:
                 rect1.get_perimeter()
             elif ans == 6:

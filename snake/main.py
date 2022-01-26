@@ -7,7 +7,7 @@ pygame.init()
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 600
 SNAKE_COLOR = (0, 255, 0)
-VEL = 5
+VEL = 4
 fps = 60
 clock = pygame.time.Clock()
 BLACK = (0, 0, 0)
@@ -26,7 +26,6 @@ class Snake(pygame.sprite.Sprite):
         # create surface of the snake
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(SNAKE_COLOR)
-        self.vel = 5
         # gets the rectangle
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
@@ -36,14 +35,14 @@ class Snake(pygame.sprite.Sprite):
         # pygame.draw.rect(screen, SNAKE_COLOR, (self.x, self.y, self.width, self.height))
 
     def border_collision(self):
-        if snake.move_dir == "left" and snake.rect.x - VEL > 0:
-            snake.rect.x -= VEL
-        if snake.move_dir == "right" and snake.rect.x + VEL + snake.width < 600:
-            snake.rect.x += VEL
-        if snake.move_dir == "up" and snake.rect.y - VEL > 0:
-            snake.rect.y -= VEL
-        if snake.move_dir == "down" and snake.rect.y + VEL + snake.height < 700:
-            snake.rect.y += VEL
+        if self.move_dir == "left" and self.rect.x - VEL > 0:
+            self.rect.x -= VEL
+        if self.move_dir == "right" and self.rect.x + VEL + self.width < 600:
+            self.rect.x += VEL
+        if self.move_dir == "up" and self.rect.y - VEL > 0:
+            self.rect.y -= VEL
+        if self.move_dir == "down" and self.rect.y + VEL + self.height < 700:
+            self.rect.y += VEL
 
 
 # Snake
