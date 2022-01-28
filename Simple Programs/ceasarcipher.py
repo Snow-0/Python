@@ -9,15 +9,16 @@ def encrypt_word():
     for num in ascii_list:
         encr_word.append(chr(num))
     # Joins the list together into a string
-    encr_word = ''.join(encr_word)
+    encr_word = "".join(encr_word)
     # Prints the encrypted phrase out
     print(encr_word)
+
 
 # Decryptes a phrase
 # parameter - string
 
 
-def decrypt_word(word):
+def decrypt_word(encr_word):
     decr_word = []
     # idk what this does
     encr_word = str(word)
@@ -29,7 +30,7 @@ def decrypt_word(word):
     for num in ascii_list:
         decr_word.append(chr(num))
     # Joins the list into a string
-    decr_word = ''.join(decr_word)
+    decr_word = "".join(decr_word)
     # Prints original text
     print(decr_word)
 
@@ -39,7 +40,8 @@ while True:
     ascii_list = []
 
     ans = input(
-        "Would you like to encrypt(e) or decrypt(d) a phrase? Type in q to quit. ")
+        "Would you like to encrypt(e) or decrypt(d) a phrase? Type in q to quit. "
+    )
 
     if ans == "e":
         word = input("Type in the word you want encrypt: ")

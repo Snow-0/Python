@@ -7,6 +7,7 @@ pygame.init()
 SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 600
 SNAKE_COLOR = (0, 255, 0)
+APPLE_COLOR = (255, 0, 0)
 VEL = 4
 fps = 60
 clock = pygame.time.Clock()
@@ -31,9 +32,6 @@ class Snake(pygame.sprite.Sprite):
         self.rect.center = [x, y]
         self.move_dir = ""
 
-        # Draws rectangle
-        # pygame.draw.rect(screen, SNAKE_COLOR, (self.x, self.y, self.width, self.height))
-
     def border_collision(self):
         if self.move_dir == "left" and self.rect.x - VEL > 0:
             self.rect.x -= VEL
@@ -45,10 +43,22 @@ class Snake(pygame.sprite.Sprite):
             self.rect.y += VEL
 
 
+class Apple(Snake):
+    def __init__(self, x, y, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        Snake.__init__(self, x, y, width, height)
+        self.image.fill(APPLE_COLOR)
+
+
 # Snake
 snake_group = pygame.sprite.Group()
 snake = Snake(100, int(SCREEN_HEIGHT / 2), 20, 20)
 snake_group.add(snake)
+
+# Apple
+apple_group = pygame.sprite.Group()
+apple = Apple(500, int(SCREEN_HEIGHT / 2), 20, 20)
+snake_group.add(apple)
 
 
 # Main game loop

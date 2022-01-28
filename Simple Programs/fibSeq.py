@@ -1,5 +1,8 @@
-# Fibonocci Sequence program that asks user for the length of sequnce to the
-# nth term
+"""
+Fibonocci Sequence program that asks user for the length of sequnce to the
+nth term
+"""
+
 
 fib = [0, 1]
 
