@@ -56,7 +56,6 @@ class Snake(pygame.sprite.Sprite):
 
 class Apple(Snake):
     def __init__(self, x, y, width, height):
-        pygame.sprite.Sprite.__init__(self)
         Snake.__init__(self, x, y, width, height)
         self.image.fill(APPLE_COLOR)
 
