@@ -12,9 +12,20 @@ VEL = 4
 fps = 60
 clock = pygame.time.Clock()
 BLACK = (0, 0, 0)
+game_over = False
+# define font
+font = pygame.font.SysFont("Fira Code", 60)
+score = 0
 
+# define color
+white = (255, 255, 255)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake")
+
+
+def draw_text(text, font, text_col, x, y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
 
 
 class Snake(pygame.sprite.Sprite):
@@ -58,7 +69,7 @@ snake_group.add(snake)
 # Apple
 apple_group = pygame.sprite.Group()
 apple = Apple(500, int(SCREEN_HEIGHT / 2), 20, 20)
-snake_group.add(apple)
+apple_group.add(apple)
 
 
 # Main game loop
@@ -66,10 +77,19 @@ run = True
 while run:
     keys = pygame.key.get_pressed()
     clock.tick(fps)
+
     screen.fill(BLACK)
     snake_group.draw(screen)
-
     snake.update()
+    apple_group.draw(screen)
+    apple.update()
+
+    if pygame.sprite.groupcollide(snake_group, apple_group, False, True):
+        score += 1
+        apple = Apple(random.randint(0, 550), random.randint(0, 650), 20, 20)
+        apple_group.add(apple)
+    draw_text(str(score), font, white, int(SCREEN_WIDTH / 2 - 25), 20)
+
     for event in pygame.event.get():
         if event.type == QUIT:
             run = False
@@ -79,12 +99,16 @@ while run:
                 run = False
             # prevent diagonal movement
             # https://stackoverflow.com/questions/60252752/i-want-to-prevent-diagonal-movement-in-pygame
-            elif event.key in [
-                pygame.K_RIGHT,
-                pygame.K_LEFT,
-                pygame.K_UP,
-                pygame.K_DOWN,
-            ]:
+            elif (
+                event.key
+                in [
+                    pygame.K_RIGHT,
+                    pygame.K_LEFT,
+                    pygame.K_UP,
+                    pygame.K_DOWN,
+                ]
+                and game_over == False
+            ):
                 snake.move_dir = pygame.key.name(event.key)
 
     snake.border_collision()
