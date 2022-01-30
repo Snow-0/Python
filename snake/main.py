@@ -1,6 +1,6 @@
-import pygame
+import pygame, random
 from pygame.locals import *
-import random
+from pygame.math import Vector2
 
 pygame.init()
 
@@ -16,11 +16,12 @@ game_over = False
 # define font
 font = pygame.font.SysFont("Fira Code", 60)
 score = 0
-
 # define color
 white = (255, 255, 255)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake")
+SCREEN_UPDATE = pygame.USEREVENT
+pygame.time.set_timer(SCREEN_UPDATE, 150)
 
 
 def draw_text(text, font, text_col, x, y):
@@ -28,47 +29,44 @@ def draw_text(text, font, text_col, x, y):
     screen.blit(img, (x, y))
 
 
-class Snake(pygame.sprite.Sprite):
+class Snake:
+    def __init__(self):
+
+        self.body = [
+            Vector2(300, 300),
+            Vector2(320, 300),
+            Vector2(340, 300),
+            Vector2(360, 300),
+        ]
+        self.direction = Vector2(10, 0)
+
+    def draw_snake(self):
+        for block in self.body:
+            x_pos = block.x
+            y_pos = block.y
+            # create rect
+            snake_rect = pygame.Rect(x_pos, y_pos, 20, 20)
+            # Draw rect
+            pygame.draw.rect(screen, SNAKE_COLOR, snake_rect)
+
+    def move(self):
+        body_copy = self.body[:-1]
+        body_copy.insert(0, body_copy[0] + self.direction)
+        self.body = body_copy[:]
+
+
+class Apple:
     def __init__(self, x, y, width, height):
-        pygame.sprite.Sprite.__init__(self)
-        self.height = height
-        self.width = width
-        self.x = x
-        self.y = y
-        # create surface of the snake
-        self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(SNAKE_COLOR)
-        # gets the rectangle
-        self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
-        self.move_dir = ""
+        pass
 
-    def border_collision(self):
-        if self.move_dir == "left" and self.rect.x - VEL > 0:
-            self.rect.x -= VEL
-        if self.move_dir == "right" and self.rect.x + VEL + self.width < 600:
-            self.rect.x += VEL
-        if self.move_dir == "up" and self.rect.y - VEL > 0:
-            self.rect.y -= VEL
-        if self.move_dir == "down" and self.rect.y + VEL + self.height < 700:
-            self.rect.y += VEL
-
-
-class Apple(Snake):
-    def __init__(self, x, y, width, height):
-        Snake.__init__(self, x, y, width, height)
-        self.image.fill(APPLE_COLOR)
-
-
-# Snake
-snake_group = pygame.sprite.Group()
-snake = Snake(100, int(SCREEN_HEIGHT / 2), 20, 20)
-snake_group.add(snake)
 
 # Apple
 apple_group = pygame.sprite.Group()
-apple = Apple(500, int(SCREEN_HEIGHT / 2), 20, 20)
-apple_group.add(apple)
+# apple = Apple(500, int(SCREEN_HEIGHT / 2), 20, 20)
+# apple_group.add(apple)
+
+# Snake
+snake = Snake()
 
 
 # Main game loop
@@ -78,39 +76,26 @@ while run:
     clock.tick(fps)
 
     screen.fill(BLACK)
-    snake_group.draw(screen)
-    snake.update()
-    apple_group.draw(screen)
-    apple.update()
-
-    if pygame.sprite.groupcollide(snake_group, apple_group, False, True):
-        score += 1
-        apple = Apple(random.randint(0, 550), random.randint(0, 650), 20, 20)
-        apple_group.add(apple)
-    draw_text(str(score), font, white, int(SCREEN_WIDTH / 2 - 25), 20)
 
     for event in pygame.event.get():
         if event.type == QUIT:
             run = False
             pygame.QUIT()
-        elif event.type == KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                run = False
-            # prevent diagonal movement
-            # https://stackoverflow.com/questions/60252752/i-want-to-prevent-diagonal-movement-in-pygame
-            elif (
-                event.key
-                in [
-                    pygame.K_RIGHT,
-                    pygame.K_LEFT,
-                    pygame.K_UP,
-                    pygame.K_DOWN,
-                ]
-                and game_over == False
-            ):
-                snake.move_dir = pygame.key.name(event.key)
+        if event.type == SCREEN_UPDATE:
+            snake.move()
+        if event.type == KEYDOWN:
+            if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN]:
+                key = pygame.key.name(event.key)
+                if key == "up":
+                    snake.direction = Vector2(0, -15)
+                elif key == "down":
+                    snake.direction = Vector2(0, 15)
+                elif key == "left":
+                    snake.direction = Vector2(-15, 0)
+                elif key == "right":
+                    snake.direction = Vector2(15, 0)
 
-    snake.border_collision()
+    snake.draw_snake()
 
     pygame.display.update()
 
