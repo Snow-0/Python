@@ -9,7 +9,7 @@ fib = [0, 1]
 
 while True:
     try:
-        ans = int(input("Input the numbers of terms for the Fibonocci Sequence: "))
+        ans = int(input("Input the number of terms for the Fibonocci Sequence: "))
         if ans < 0:
             print("Input cannot be negative")
             continue

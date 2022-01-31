@@ -33,10 +33,10 @@ class Snake:
     def __init__(self):
 
         self.body = [
-            Vector2(300, 300),
-            Vector2(320, 300),
-            Vector2(340, 300),
-            Vector2(360, 300),
+            Vector2(100, 300),
+            Vector2(120, 300),
+            Vector2(140, 300),
+            Vector2(160, 300),
         ]
         self.direction = Vector2(10, 0)
 
@@ -56,15 +56,24 @@ class Snake:
 
 
 class Apple:
-    def __init__(self, x, y, width, height):
-        pass
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def draw_apple(self):
+        apple_rect = pygame.Rect(self.x, self.y, 20, 20)
+        pygame.draw.rect(screen, APPLE_COLOR, apple_rect)
 
 
+def rect_collision():
+    # if pygame.Rect.collidepoint(snake_rect, apple_rect) == True:
+    #     print("The Snake ate the apple!")
+    pass
+
+
+# instantiate objects
 # Apple
-apple_group = pygame.sprite.Group()
-# apple = Apple(500, int(SCREEN_HEIGHT / 2), 20, 20)
-# apple_group.add(apple)
-
+apple = Apple(500, SCREEN_HEIGHT // 2)
 # Snake
 snake = Snake()
 
@@ -96,7 +105,8 @@ while run:
                     snake.direction = Vector2(15, 0)
 
     snake.draw_snake()
-
+    apple.draw_apple()
+    rect_collision()
     pygame.display.update()
 
 
