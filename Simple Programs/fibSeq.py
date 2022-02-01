@@ -23,8 +23,7 @@ while True:
 
 def fib_sequence(term):
     for num in range(1, term + 1):
-        fib.append(num + (num - 1))
-
+        fib.append(fib[-1] + fib[-2])
     return fib
 
 
