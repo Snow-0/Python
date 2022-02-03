@@ -65,17 +65,16 @@ class Apple:
         pygame.draw.rect(screen, APPLE_COLOR, apple_rect)
 
 
-def rect_collision():
-    # if pygame.Rect.collidepoint(snake_rect, apple_rect) == True:
-    #     print("The Snake ate the apple!")
-    pass
-
-
 # instantiate objects
 # Apple
 apple = Apple(500, SCREEN_HEIGHT // 2)
 # Snake
 snake = Snake()
+
+
+class Main:
+    def __init__(self):
+        self.snake = Snake()
 
 
 # Main game loop
@@ -106,7 +105,6 @@ while run:
 
     snake.draw_snake()
     apple.draw_apple()
-    rect_collision()
     pygame.display.update()
 
 
