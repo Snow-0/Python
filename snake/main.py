@@ -14,10 +14,12 @@ clock = pygame.time.Clock()
 BLACK = (0, 0, 0)
 game_over = False
 # define font
-font = pygame.font.SysFont("Fira Code", 60)
+font_counter = pygame.font.SysFont("Fira Code", 60)
+font_restart = pygame.font.SysFont("Fira Code", 30)
+
 score = 0
 # define color
-white = (255, 255, 255)
+WHITE = (255, 255, 255)
 screen = pygame.display.set_mode(
     (cell_number * cell_size, cell_number * cell_size))
 pygame.display.set_caption("Snake")
@@ -114,7 +116,18 @@ class Main:
                 self.game_over()
 
     def game_over(self):
-        pygame.QUIT()
+        game_over_text = "Game Over! Press r to restart"
+        draw_text(game_over_text, font_restart, WHITE, 150, 300)
+        game_over = True
+
+    def restart_game(self):
+        counter = 0
+        game_over = False
+        self.apple.randomize()
+        self.snake.body = [
+            Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)
+
+        ]
 
 
 main_game = Main()
@@ -126,7 +139,8 @@ while run:
     clock.tick(fps)
 
     screen.fill(BLACK)
-    draw_text(str(counter), font, white, (cell_size * cell_number / 2 - 10), 5)
+    draw_text(str(counter), font_counter, WHITE,
+              (cell_size * cell_number / 2 - 10), 5)
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -148,6 +162,9 @@ while run:
                 elif key == "right":
                     if main_game.snake.direction.x != -1:
                         main_game.snake.direction = Vector2(1, 0)
+        if event.type == KEYDOWN and game_over == False:
+            if event.key == pygame.K_r:
+                main_game.restart_game()
     main_game.check_fail()
     main_game.draw_elements()
     pygame.display.update()
