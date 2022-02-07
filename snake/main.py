@@ -53,14 +53,15 @@ class Snake:
             pygame.draw.rect(screen, SNAKE_COLOR, snake_rect)
 
     def move(self):
-        if self.new_block == True:
-            body_copy = self.body[:]
+        if game_over == False:
+            if self.new_block == True:
+                body_copy = self.body[:]
+                body_copy.insert(0, body_copy[0] + self.direction)
+                self.body = body_copy[:]
+                self.new_block = False
+            body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
-            self.new_block = False
-        body_copy = self.body[:-1]
-        body_copy.insert(0, body_copy[0] + self.direction)
-        self.body = body_copy[:]
 
     def add_block(self):
         self.new_block = True
@@ -135,6 +136,7 @@ main_game = Main()
 # Main game loop
 run = True
 while run:
+    print(game_over)
     keys = pygame.key.get_pressed()
     clock.tick(fps)
 
