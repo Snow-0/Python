@@ -1,31 +1,32 @@
+# import pygame library and random module
 import pygame
 import random
 from pygame.locals import *
 from pygame.math import Vector2
 
+# initialize pygame
 pygame.init()
 
+# Declare variables
+# screen size
 cell_size = 40
 cell_number = 20
-SNAKE_COLOR = (0, 255, 0)
-APPLE_COLOR = (255, 0, 0)
 fps = 60
 clock = pygame.time.Clock()
 BLACK = (0, 0, 0)
-game_over = False
 # define font
 font_counter = pygame.font.SysFont("Fira Code", 60)
 font_restart = pygame.font.SysFont("Fira Code", 30)
 
-score = 0
 # define color
 WHITE = (255, 255, 255)
+SNAKE_COLOR = (0, 255, 0)  # Green
+APPLE_COLOR = (255, 0, 0)  # Red
 screen = pygame.display.set_mode(
     (cell_number * cell_size, cell_number * cell_size))
 pygame.display.set_caption("Snake")
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 150)
-counter = 0
 
 
 def draw_text(text, font, text_col, x, y):
@@ -35,12 +36,12 @@ def draw_text(text, font, text_col, x, y):
 
 class Snake:
     def __init__(self):
-
+        # starting snake size
         self.body = [
             Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)
 
         ]
-        self.direction = Vector2(1, 0)
+        self.direction = Vector2(0, 0)
         self.new_block = False
 
     def draw_snake(self):
@@ -53,18 +54,29 @@ class Snake:
             pygame.draw.rect(screen, SNAKE_COLOR, snake_rect)
 
     def move(self):
-        if game_over == False:
-            if self.new_block == True:
-                body_copy = self.body[:]
-                body_copy.insert(0, body_copy[0] + self.direction)
-                self.body = body_copy[:]
-                self.new_block = False
-            body_copy = self.body[:-1]
+        # adds new block to end of snake when eating apple
+        if self.new_block == True:
+            body_copy = self.body[:]  # copies entire snake.body list
+            # adds snake head to the front of the list + direction of input
             body_copy.insert(0, body_copy[0] + self.direction)
-            self.body = body_copy[:]
+            self.body = body_copy[:]  # updates the new snake body size
+            self.new_block = False
+        # moves snake without adding a block
+        body_copy = self.body[:-1]
+        body_copy.insert(0, body_copy[0] + self.direction)
+        self.body = body_copy[:]
 
     def add_block(self):
         self.new_block = True
+
+    # resets position of snake when colliding with itself or wall
+    def reset(self):
+
+        self.body = [
+            Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)
+
+        ]
+        self.direction = Vector2(0, 0)
 
 
 class Apple:
@@ -100,16 +112,19 @@ class Main:
         if self.apple.pos == self.snake.body[0]:
             # repositions the fruit
             self.apple.randomize()
-            counter += 1
 
             # add block to snake
             self.snake.add_block()
 
+        for block in self.snake.body[1:]:
+            if block == self.apple.pos:
+                self.apple.randomize()
+
     def check_fail(self):
         # check if snake leaves the screen
-        if not 0 <= self.snake.body[0].x <= cell_number - 1:
+        if not 0 <= self.snake.body[0].x <= cell_number:
             self.game_over()
-        if not 0 <= self.snake.body[0].y <= cell_number - 1:
+        if not 0 <= self.snake.body[0].y <= cell_number:
             self.game_over()
 
         for block in self.snake.body[1:]:
@@ -117,18 +132,7 @@ class Main:
                 self.game_over()
 
     def game_over(self):
-        game_over_text = "Game Over! Press r to restart"
-        draw_text(game_over_text, font_restart, WHITE, 150, 300)
-        game_over = True
-
-    def restart_game(self):
-        counter = 0
-        game_over = False
-        self.apple.randomize()
-        self.snake.body = [
-            Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)
-
-        ]
+        self.snake.reset()
 
 
 main_game = Main()
@@ -136,11 +140,12 @@ main_game = Main()
 # Main game loop
 run = True
 while run:
-    print(game_over)
     keys = pygame.key.get_pressed()
     clock.tick(fps)
-
     screen.fill(BLACK)
+
+    # draws the score
+    counter = str(len(main_game.snake.body) - 3)
     draw_text(str(counter), font_counter, WHITE,
               (cell_size * cell_number / 2 - 10), 5)
 
@@ -149,10 +154,12 @@ while run:
             run = False
         if event.type == SCREEN_UPDATE:
             main_game.update()
-        if event.type == KEYDOWN and game_over == False:
+        if event.type == KEYDOWN:
+            # checks if user input is the arrow keys
             if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_UP, pygame.K_DOWN]:
                 key = pygame.key.name(event.key)
                 if key == "up":
+                    # prevents user from moving back into the snake's body
                     if main_game.snake.direction.y != 1:
                         main_game.snake.direction = Vector2(0, -1)
                 elif key == "down":
@@ -164,9 +171,6 @@ while run:
                 elif key == "right":
                     if main_game.snake.direction.x != -1:
                         main_game.snake.direction = Vector2(1, 0)
-        if event.type == KEYDOWN and game_over == False:
-            if event.key == pygame.K_r:
-                main_game.restart_game()
     main_game.check_fail()
     main_game.draw_elements()
     pygame.display.update()
