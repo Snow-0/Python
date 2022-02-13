@@ -25,9 +25,6 @@ BULLET_HIT_SOUND = pygame.mixer.Sound(
 BULLET_FIRE_SOUND = pygame.mixer.Sound(
     os.path.join('spaceship_game/Assets', 'Gun+Silencer.mp3'))
 
-BACKGROUND_MUSIC = pygame.mixer.Sound(
-    os.path.join('spaceship_game/Assets', 'music.mp3'))
-
 
 FPS = 60
 VEL = 5
@@ -162,8 +159,6 @@ def main():
     yellow_health = 10
 
     clock = pygame.time.Clock()
-    BACKGROUND_MUSIC.play()
-    BACKGROUND_MUSIC.set_volume(0.7)
 
     run = True
     while run:
