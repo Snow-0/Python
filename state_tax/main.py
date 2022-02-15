@@ -1,5 +1,6 @@
 # Tax Calculator
 # import pandas to read excel sheet and convert to dict
+# must install panda and openpyxl
 import pandas
 xlsx = pandas.read_excel('/home/max/Python/state_tax/state_tax_rate.xlsx')
 file = xlsx.to_dict("dict")
