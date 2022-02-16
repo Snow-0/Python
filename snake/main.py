@@ -1,3 +1,5 @@
+# clone of the popular Snake game
+# followed most of this tutorial: https://www.youtube.com/watch?v=QFvqStqPCRU
 # import pygame library and random module
 import pygame
 import random
