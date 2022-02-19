@@ -1,5 +1,8 @@
-# Simple currency converter that uses the CurrencyConverter library and pandas for importing spreadsheets
-
+""".
+Simple currency converter that uses 
+the CurrencyConverter library and pandas 
+for importing spreadsheets.
+"""
 from currency_converter import CurrencyConverter
 import pandas
 # import spreadsheet
