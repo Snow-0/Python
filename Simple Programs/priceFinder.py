@@ -17,8 +17,8 @@ doc = BeautifulSoup(page, "html.parser")
 page_text = doc.find(class_="list-tool-pagination-text").strong
 
 # splitting string to grab the number on the right of the strong tag
-# pages = int(str(page_text).split("/")[-2].split(">")[-1][:-1])
-pages = 1
+pages = int(str(page_text).split("/")[-2].split(">")[-1][:-1])
+
 
 # looks through all the pages that has the "3080" search term
 for page in range(pages):
