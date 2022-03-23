@@ -21,6 +21,5 @@ else:
     print("Temperature: " + str(weather_data["main"]["temp"]) + "F")
     print("Lows: " + str(weather_data["main"]["temp_min"])+ "F")
     print("Highs: " + str(weather_data["main"]["temp_max"]) + "F")
-    # Description is a dictionary that has a list 
-    # List itself has one dictionary, so index 0 is needed
+    # weather is a list that has one dictionary, so index 0 is needed
     print("Description: " + weather_data["weather"][0]["description"])
