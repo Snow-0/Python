@@ -35,27 +35,34 @@ font = pygame.font.SysFont('monospace', 30)
 player_score = 0
 opponent_score = 0
 
+
 def ball_bounce():
-    global ball_speed_x, ball_speed_y
+    global ball_speed_x, ball_speed_y, opponent_score, player_score
+
     ball.x += ball_speed_x
     ball.y += ball_speed_y
 
     if ball.top <= 0 or ball.bottom >= screen_height:
         ball_speed_y *= -1
     if ball.left <= 0 or ball.right >= screen_width:
+        if ball.left <= 0:
+            player_score += 1
+            print(player_score)
+        if ball.right >= screen_width:
+            opponent_score += 1
         ball_restart()
-    
 
     # paddle collision
     if ball.colliderect(player) or ball.colliderect(opponent):
         ball_speed_x *= -1
+
 
 def ball_restart():
     global ball_speed_x, ball_speed_y
     ball.center = (screen_width / 2, screen_height / 2)
     ball_speed_x *= random.choice((1, -1))
     ball_speed_y *= random.choice((1, -1))
-    
+
 
 def player_movement():
     # allow the player paddle to move
@@ -67,23 +74,28 @@ def player_movement():
     if player.bottom >= screen_height:
         player.bottom = screen_height
 
+
 def opponent_movement():
     # allow the opponent paddle to move
     opponent.y += opponent_speed
-    
+
     # check if paddle leaves the screen
     if opponent.top <= 0:
         opponent.top = 0
     if opponent.bottom >= screen_height:
-        opponent.bottom = screen_height 
+        opponent.bottom = screen_height
+
 
 def draw_score():
     player_score_text = font.render(str(player_score), 1, WHITE)
     opponent_score_text = font.render(str(opponent_score), 1, WHITE)
-    screen.blit(player_score_text, (screen_width / 2 + 15, screen_height / 2))    
-    screen.blit(opponent_score_text, (screen_width / 2 - 35, screen_height / 2))    
+    screen.blit(player_score_text, (screen_width / 2 + 15, screen_height / 2))
+    screen.blit(opponent_score_text,
+                (screen_width / 2 - 35, screen_height / 2))
+
 
 while True:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -95,7 +107,7 @@ while True:
                 player_speed += 10
             if event.key == pygame.K_UP:
                 player_speed -= 10
-                
+
             # opponent movement
             if event.key == pygame.K_s:
                 opponent_speed += 10
@@ -108,32 +120,27 @@ while True:
                 player_speed -= 10
             if event.key == pygame.K_UP:
                 player_speed += 10
-            # opponent movement 
+            # opponent movement
             if event.key == pygame.K_s:
                 opponent_speed -= 10
             if event.key == pygame.K_w:
                 opponent_speed += 10
-        
-    if ball.left <= 0:
-        player_score += 1
-    if ball.right >= screen_width:
-        opponent_score += 1 
 
-    print(player_score)
-    # prevents 'trail'  
-    screen.fill(BLACK) 
-
-    ball_bounce()
+    # prevents 'trail'
+    screen.fill(BLACK)
     player_movement()
     opponent_movement()
+    ball_bounce()
     draw_score()
-    #draws paddles and ball
+    print(player.y)
+    # draws paddles and ball
     pygame.draw.rect(screen, WHITE, player)
     pygame.draw.rect(screen, WHITE, opponent)
     pygame.draw.ellipse(screen, WHITE, ball)
     # draws the line
-    pygame.draw.aaline(screen, WHITE, (screen_width / 2, 0), (screen_width / 2, screen_height))
-    
-    # updating the window 
+    pygame.draw.aaline(screen, WHITE, (screen_width / 2, 0),
+                       (screen_width / 2, screen_height))
+
+    # updating the window
     pygame.display.flip()
     clock.tick(60)
