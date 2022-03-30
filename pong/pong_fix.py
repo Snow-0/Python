@@ -11,7 +11,9 @@ clock = pygame.time.Clock()
 screen_width = 1280
 screen_height = 960
 
+
 screen = pygame.display.set_mode((screen_width, screen_height))
+screen_rect = screen.get_rect()
 pygame.display.set_caption("Pong")
 
 WHITE = (255, 255, 255)
@@ -27,16 +29,12 @@ class Paddle:
         self.rect = pygame.Rect(x_pos, y_pos, self.width, self.height)
         self.speed = 0
 
-    def draw_paddle(self):
-        pygame.draw.rect(screen, WHITE, self.rect)
-
     def paddle_movement(self):
+        pygame.draw.rect(screen, WHITE, self.rect)
+        self.rect.clamp_ip(screen_rect)
         self.rect.y += self.speed
 
-        if self.rect.y <= 0:
-            self.rect.y = 0
-        if self.rect.y >= screen_height:
-            self.rect.y = screen_height
+       
 
 
 paddle_a = Paddle(10, screen_height / 2 - 70)
@@ -76,8 +74,7 @@ while True:
 
     screen.fill(BLACK)
     print(paddle_a.rect.y)
-    paddle_a.draw_paddle()
-    paddle_b.draw_paddle()
+     
     paddle_a.paddle_movement()
     paddle_b.paddle_movement()
     # updating the window
