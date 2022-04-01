@@ -1,4 +1,7 @@
-# basic code for pygame
+# Pong clone using the Pygame library
+# followed this for countdown timer: https://www.youtube.com/watch?v=E4Ih9mpn5tk
+# followed this for rectangle collision: https://www.youtube.com/watch?v=W9uKzPFS1CI
+
 
 import pygame
 import random
@@ -21,6 +24,9 @@ pygame.display.set_caption("Pong")
 # paddle color
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+
+# score timer
+score_timer = None
 
 
 class Paddle:
@@ -51,9 +57,11 @@ class Ball:
         self.height = 20
         self.rect = pygame.Rect(self.x_pos, self.y_pos,
                                 self.width, self.height)
-        self.ball_x_speed = 7
-        self.ball_y_speed = 7
-        self.collision_tolerance = 10
+        self.ball_x_speed = 10
+        self.ball_y_speed = 10
+        self.collision_tolerance = 20
+        self.score_time = None
+        self.current_time = None
 
     def ball_bounce(self):
         pygame.draw.ellipse(screen, WHITE, self.rect)
@@ -66,8 +74,6 @@ class Ball:
         if self.rect.left <= 0 or self.rect.right >= screen_width:
             # adds a point when ball hits the left or right border
             self.paddle_score()
-            # resets the ball to the middle when the ball hits the left or right border
-            self.ball_reset()
 
         # collision with the paddles
         if self.rect.colliderect(paddle_a.rect):
@@ -89,18 +95,39 @@ class Ball:
             if abs(paddle_b.rect.left - self.rect.right) < self.collision_tolerance:
                 self.ball_x_speed *= -1
 
-    def ball_reset(self):
+    def reset(self):
+        self.current_time = pygame.time.get_ticks()
         # positions the ball in the middle
         self.rect.center = (screen_width / 2, screen_height / 2)
-        # causes the ball to come out in a random direction
-        self.ball_x_speed *= random.choice((1, -1))
-        self.ball_y_speed *= random.choice((1, -1))
+
+        if self.current_time - self.score_time < 700:
+            three = font.render('3', True, WHITE)
+            screen.blit(three, (screen_width / 2 -
+                        10, screen_height / 2 + 20))
+        if 700 < self.current_time - self.score_time < 1400:
+            two = font.render('2', True, WHITE)
+            screen.blit(two, (screen_width / 2 -
+                        10, screen_height / 2 + 20))
+
+        if self.current_time - self.score_time < 2100:
+            one = font.render('1', True, WHITE)
+            screen.blit(one, (screen_width / 2 -
+                        10, screen_height / 2 + 20))
+        if self.current_time - self.score_time < 2100:
+            self.ball_x_speed, self.ball_y_speed = 0, 0
+        else:
+            # causes the ball to come out in a random direction
+            self.ball_x_speed = 7 * random.choice((1, -1))
+            self.ball_y_speed = 7 * random.choice((1, -1))
+            self.score_time = None
 
     def paddle_score(self):
         if self.rect.left <= 0:
-            paddle_b.score += 1
-        if self.rect.right >= screen_width:
             paddle_a.score += 1
+            self.score_time = pygame.time.get_ticks()
+        if self.rect.right >= screen_width:
+            paddle_b.score += 1
+            self.score_time = pygame.time.get_ticks()
 
 
 paddle_a = Paddle(10, screen_height / 2 - 70)
@@ -114,7 +141,7 @@ def draw_score():
     screen.blit(paddle_a_score_text,
                 (screen_width / 2 + 15, screen_height / 2))
     screen.blit(paddle_b_score_text,
-                (screen_width / 2 - 35, screen_height / 2))
+                (screen_width / 2 - 40, screen_height / 2))
 
 
 while True:
@@ -156,6 +183,9 @@ while True:
     # draws the in line in the middle
     pygame.draw.aaline(screen, WHITE, (screen_width / 2, 0),
                        (screen_width / 2, screen_height))
+    if ball.score_time:
+        # resets the ball to the middle when the ball hits the left or right border
+        ball.reset()
     # ball movement
     ball.ball_bounce()
     # draws paddle scores
