@@ -1,8 +1,11 @@
-# Tax Calculator
+# Calculates tax rate  based on state
 # import pandas to read excel sheet and convert to dict
 # must install panda and openpyxl
 import pandas
-xlsx = pandas.read_excel('/home/max/Python/state_tax/state_tax_rate.xlsx')
+import os 
+directory = os.path.dirname(__file__)
+excel_file = os.path.join(directory, "state_tax_rate.xlsx")
+xlsx = pandas.read_excel(excel_file)
 file = xlsx.to_dict("dict")
 
 # param{str}
