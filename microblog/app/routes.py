@@ -23,7 +23,5 @@ def login():
                 form.username, form.remember_me
             )
         )
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
     return render_template("login.html", title="Sign In", form=form)
-
- 
